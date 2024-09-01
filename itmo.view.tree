@@ -21,7 +21,7 @@ $my_itmo $mol_book2
 					<= Discipline*0 $mol_card content /
 						<= Discipline_slot* $mol_select
 							value? <=> discipline_slot*? \
-							options <= discipline_slot_options* *
+							options <= discipline_slot_options* /string
 							option_label* <= discipline_slot_title* \
 						<= Discipline_title* $mol_link
 							title <= discipline_title* \
