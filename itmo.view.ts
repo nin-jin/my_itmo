@@ -45,7 +45,7 @@ namespace $.$$ {
 		
 		@ $mol_mem
 		days_data() {
-			return $mol_array_groups( Object.keys( this.slots_data() ), slot => slot.slice( 0, 10 ) )
+			return $mol_array_groups( Object.keys( this.slots_data() ).sort(), slot => slot.slice( 0, 10 ) )
 		}
 		
 		@ $mol_mem
@@ -137,7 +137,8 @@ namespace $.$$ {
 		
 		@ $mol_mem_key
 		discipline_slot_title( slot: string ) {
-			return ( this.slot_value( slot ) ? '🔵 ' : '🟢 ' ) + new $mol_time_moment( slot ).toString( 'DD Mon hh:mm' )
+			return ( this.slot_value( slot ) ? '🔵 ' : '🟢 ' )
+				+ new $mol_time_moment( slot ).toString( 'DD Mon hh:mm' )
 		}
 		
 		@ $mol_mem
