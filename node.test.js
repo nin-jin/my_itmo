@@ -8473,6 +8473,15 @@ var $;
 		days(){
 			return [(this?.Day("00"))];
 		}
+		disciplines_query(next){
+			if(next !== undefined) return next;
+			return "";
+		}
+		Disciplines_query(){
+			const obj = new this.$.$mol_search();
+			(obj.query) = (next) => ((this?.disciplines_query(next)));
+			return obj;
+		}
 		discipline_slot(id, next){
 			if(next !== undefined) return next;
 			return "";
@@ -8490,21 +8499,27 @@ var $;
 			(obj.option_label) = (id) => ((this?.discipline_slot_title(id)));
 			return obj;
 		}
-		discipline_title(id){
-			return "";
-		}
 		discipline_arg(id){
 			return {};
 		}
+		discipline_title(id){
+			return "";
+		}
 		Discipline_title(id){
+			const obj = new this.$.$mol_dimmer();
+			(obj.needle) = () => ((this?.disciplines_query()));
+			(obj.haystack) = () => ((this?.discipline_title(id)));
+			return obj;
+		}
+		Discipline_link(id){
 			const obj = new this.$.$mol_link();
-			(obj.title) = () => ((this?.discipline_title(id)));
 			(obj.arg) = () => ((this?.discipline_arg(id)));
+			(obj.sub) = () => ([(this?.Discipline_title(id))]);
 			return obj;
 		}
 		Discipline(id){
 			const obj = new this.$.$mol_card();
-			(obj.content) = () => ([(this?.Discipline_slot(id)), (this?.Discipline_title(id))]);
+			(obj.content) = () => ([(this?.Discipline_slot(id)), (this?.Discipline_link(id))]);
 			return obj;
 		}
 		disciplines_rows(){
@@ -8518,6 +8533,7 @@ var $;
 		Disciplines(){
 			const obj = new this.$.$mol_page();
 			(obj.title) = () => ("Дисциплины");
+			(obj.tools) = () => ([(this?.Disciplines_query())]);
 			(obj.body) = () => ([(this?.Disciplines_rows())]);
 			return obj;
 		}
@@ -8581,9 +8597,12 @@ var $;
 	($mol_mem_key(($.$my_itmo.prototype), "Slot_value"));
 	($mol_mem_key(($.$my_itmo.prototype), "Slot"));
 	($mol_mem_key(($.$my_itmo.prototype), "Day"));
+	($mol_mem(($.$my_itmo.prototype), "disciplines_query"));
+	($mol_mem(($.$my_itmo.prototype), "Disciplines_query"));
 	($mol_mem_key(($.$my_itmo.prototype), "discipline_slot"));
 	($mol_mem_key(($.$my_itmo.prototype), "Discipline_slot"));
 	($mol_mem_key(($.$my_itmo.prototype), "Discipline_title"));
+	($mol_mem_key(($.$my_itmo.prototype), "Discipline_link"));
 	($mol_mem_key(($.$my_itmo.prototype), "Discipline"));
 	($mol_mem(($.$my_itmo.prototype), "Disciplines_rows"));
 	($mol_mem(($.$my_itmo.prototype), "Disciplines"));
@@ -9934,7 +9953,9 @@ var $;
                 return Object.fromEntries(Object.keys(this.slots_data()).map(slot => [this.slot_value(slot) ?? '', slot]));
             }
             disciplines_rows() {
-                return Object.keys(this.data().discipline).map(id => this.Discipline(id));
+                return Object.keys(this.data().discipline)
+                    .filter($mol_match_text(this.disciplines_query(), id => [this.discipline_title(id)]))
+                    .map(id => this.Discipline(id));
             }
             discipline_title(id) {
                 return this.data().discipline[id].name;
