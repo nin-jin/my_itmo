@@ -10067,7 +10067,7 @@ var $;
             },
             Disciplines: {
                 flex: {
-                    basis: `40rem`,
+                    basis: `30rem`,
                 },
             },
             Disciplines_rows: {
