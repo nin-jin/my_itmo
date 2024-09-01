@@ -68,8 +68,10 @@ namespace $.$$ {
 			return Object.keys( this.slots_data() ).map( slot => this.Slot( slot ) )
 		}
 		
-		slot_time( slot: string ) {
+		@ $mol_mem_key
+		slot_descr( slot: string ) {
 			return new $mol_time_moment( slot ).toString( 'hh:mm' )
+				+ ' ' + ( this.data().flow[ this.slot_value( slot ) ]?.variants[0].room ?? '' )
 		}
 		
 		@ $mol_mem_key

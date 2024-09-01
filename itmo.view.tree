@@ -10,7 +10,7 @@ $my_itmo $mol_book2
 				title <= day_title* \00
 				body <= day_slots* /
 					<= Slot*0 $mol_labeler
-						title <= slot_time* \00:00 .. 00:00
+						title <= slot_descr* \00:00 .. 00:00
 						Content <= Slot_value* $mol_select
 							value? <=> slot_value*? \
 							dictionary <= slot_options* *
