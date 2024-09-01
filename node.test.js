@@ -9892,7 +9892,7 @@ var $;
                 return $mol_array_groups(Object.values(this.data().flow), flow => (flow.variants[0]?.date ?? '') + 'T' + (flow.variants[0]?.time_start ?? ''));
             }
             days_data() {
-                return $mol_array_groups(Object.keys(this.slots_data()), slot => slot.slice(0, 10));
+                return $mol_array_groups(Object.keys(this.slots_data()).sort(), slot => slot.slice(0, 10));
             }
             days() {
                 return Object.keys(this.days_data()).sort().flatMap(day => day === 'T' ? [] : [this.Day(day)]);
@@ -9958,7 +9958,8 @@ var $;
                 return [...new Set(slots)].sort();
             }
             discipline_slot_title(slot) {
-                return (this.slot_value(slot) ? '🔵 ' : '🟢 ') + new $mol_time_moment(slot).toString('DD Mon hh:mm');
+                return (this.slot_value(slot) ? '🔵 ' : '🟢 ')
+                    + new $mol_time_moment(slot).toString('DD Mon hh:mm');
             }
             discipline_current() {
                 return this.$.$mol_state_arg.value('discipline') ?? null;
