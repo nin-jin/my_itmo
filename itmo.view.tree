@@ -2,6 +2,9 @@ $my_itmo $mol_book2
 	pages /
 		<= Legend $mol_page
 			title \Легенда
+			tools /
+				<= Source $mol_link_source
+					uri \https://github.com/nin-jin/my_itmo/
 			body <= buildings /
 				<= Building* $mol_button_minor
 					title <= building_title* \
