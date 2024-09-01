@@ -21,7 +21,7 @@ $my_itmo $mol_book2
 					query? <=> disciplines_query? \
 			body /
 				<= Disciplines_rows $mol_list rows <= disciplines_rows /
-					<= Discipline*0 $mol_card content /
+					<= Discipline*0 $mol_view sub /
 						<= Discipline_slot* $mol_select
 							value? <=> discipline_slot*? \
 							options <= discipline_slot_options* /string

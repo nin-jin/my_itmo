@@ -37,9 +37,18 @@ namespace $.$$ {
 		},
 		
 		Discipline: {
-			Content: {
-				padding: 0,
-			}
+			background: {
+				color: $mol_theme.card,
+			},
+			border: {
+				radius: $mol_gap.round,
+			},
+		},
+		
+		Discipline_link: {
+			flex: {
+				shrink: 1,
+			},
 		},
 		
 		Discipline_slot: {
