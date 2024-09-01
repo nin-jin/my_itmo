@@ -356,19 +356,6 @@ $mol_link $mol_view
 		^
 		click?event <=> click?event <=> event_click?event null
 
-$mol_card $mol_list
-	attr *
-		^
-		mol_card_status_type <= status \
-	rows /$mol_view
-		<= Content $mol_view
-			sub <= content /$mol_view_content
-				<= title
-		<= Status $mol_view
-			minimal_height 30
-			sub /
-				<= status_text <= status \
-
 $mol_stack $mol_view
 
 $mol_text_code_token $mol_dimmer
@@ -527,7 +514,7 @@ $my_itmo $mol_book2
 					query? <=> disciplines_query? \
 			body /
 				<= Disciplines_rows $mol_list rows <= disciplines_rows /
-					<= Discipline*0 $mol_card content /
+					<= Discipline*0 $mol_view sub /
 						<= Discipline_slot* $mol_select
 							value? <=> discipline_slot*? \
 							options <= discipline_slot_options* /string

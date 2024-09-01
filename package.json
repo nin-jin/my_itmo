@@ -170,7 +170,6 @@
     "$mol_labeler",
     "$mol_link",
     "$mol_state_arg",
-    "$mol_card",
     "$mol_text_code",
     "$mol_text",
     "$mol_stack",

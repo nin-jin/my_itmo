@@ -6664,67 +6664,6 @@ var $;
 })($ || ($ = {}));
 
 ;
-	($.$mol_card) = class $mol_card extends ($.$mol_list) {
-		status(){
-			return "";
-		}
-		content(){
-			return [(this?.title())];
-		}
-		Content(){
-			const obj = new this.$.$mol_view();
-			(obj.sub) = () => ((this?.content()));
-			return obj;
-		}
-		status_text(){
-			return (this?.status());
-		}
-		Status(){
-			const obj = new this.$.$mol_view();
-			(obj.minimal_height) = () => (30);
-			(obj.sub) = () => ([(this?.status_text())]);
-			return obj;
-		}
-		attr(){
-			return {...(super.attr()), "mol_card_status_type": (this?.status())};
-		}
-		rows(){
-			return [(this?.Content()), (this?.Status())];
-		}
-	};
-	($mol_mem(($.$mol_card.prototype), "Content"));
-	($mol_mem(($.$mol_card.prototype), "Status"));
-
-
-;
-"use strict";
-
-;
-"use strict";
-var $;
-(function ($) {
-    var $$;
-    (function ($$) {
-        class $mol_card extends $.$mol_card {
-            rows() {
-                return [
-                    this.Content(),
-                    ...this.status_text() ? [this.Status()] : [],
-                ];
-            }
-        }
-        $$.$mol_card = $mol_card;
-    })($$ = $.$$ || ($.$$ = {}));
-})($ || ($ = {}));
-
-;
-"use strict";
-var $;
-(function ($) {
-    $mol_style_attach("mol/card/card.view.css", "[mol_card] {\n\tbackground: var(--mol_theme_card);\n\tcolor: var(--mol_theme_text);\n\tborder-radius: var(--mol_gap_round);\n\tdisplay: flex;\n\tflex: 0 1 auto;\n\tflex-direction: column;\n\tposition: relative;\n\tbox-shadow: 0 0 0.5rem 0rem hsla(0,0%,0%,.125);\n\t/* overflow: hidden; */\n}\n\n[mol_card_content] {\n\tflex: 1 1 auto;\n\tborder-radius: var(--mol_gap_round);\n\tmargin: 0;\n\tpadding: var(--mol_gap_block);\n}\n\n[mol_card_status] {\n\tbackground: var(--mol_theme_line);\n\ttext-transform: capitalize;\n\tpadding: var(--mol_gap_text);\n\tmargin: 0;\n}\n\n[mol_card_status] {\n\tbackground: var(--mol_theme_line);\n}\n");
-})($ || ($ = {}));
-
-;
 	($.$mol_stack) = class $mol_stack extends ($.$mol_view) {};
 
 
@@ -8075,8 +8014,8 @@ var $;
 			return obj;
 		}
 		Discipline(id){
-			const obj = new this.$.$mol_card();
-			(obj.content) = () => ([(this?.Discipline_slot(id)), (this?.Discipline_link(id))]);
+			const obj = new this.$.$mol_view();
+			(obj.sub) = () => ([(this?.Discipline_slot(id)), (this?.Discipline_link(id))]);
 			return obj;
 		}
 		disciplines_rows(){
@@ -9487,9 +9426,17 @@ var $;
                 gap: $mol_gap.block,
             },
             Discipline: {
-                Content: {
-                    padding: 0,
-                }
+                background: {
+                    color: $mol_theme.card,
+                },
+                border: {
+                    radius: $mol_gap.round,
+                },
+            },
+            Discipline_link: {
+                flex: {
+                    shrink: 1,
+                },
             },
             Discipline_slot: {
                 flex: {
