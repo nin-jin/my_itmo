@@ -1,0 +1,43 @@
+$my_itmo $mol_book2
+	pages /
+		<= Legend $mol_page
+			title \Легенда
+			body <= buildings /
+				<= Building* $mol_button_minor
+					title <= building_title* \
+		^ days /
+			<= Day*00 $mol_page
+				title <= day_title* \00
+				body <= day_slots* /
+					<= Slot*0 $mol_labeler
+						title <= slot_time* \00:00 .. 00:00
+						Content <= Slot_value* $mol_select
+							value? <=> slot_value*? \
+							dictionary <= slot_options* *
+		<= Disciplines $mol_page
+			title \Дисциплины
+			body /
+				<= Disciplines_rows $mol_list rows <= disciplines_rows /
+					<= Discipline*0 $mol_card content /
+						<= Discipline_slot* $mol_select
+							value? <=> discipline_slot*? \
+							option_label* <= discipline_slot_title* \
+						<= Discipline_title* $mol_link
+							title <= discipline_title* \
+							arg <= discipline_arg* *
+		^ pages_dynamic /
+			<= Discipline_page* $mol_page
+				title <= discipline_title*
+				tools /
+					<= Discipline_page_close $mol_link
+						arg * discipline null
+						sub /
+							<= Discipline_page_close_icon $mol_icon_close
+				body /
+					<= Discipline_descr* $mol_text_code
+						text <= discipline_descr* \
+	Placeholder <= Raw $mol_page
+		title \Сырые данные
+		body /
+			<= Dump $mol_dump_value
+				value <= dump null
