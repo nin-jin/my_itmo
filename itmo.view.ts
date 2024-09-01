@@ -88,10 +88,14 @@ namespace $.$$ {
 		
 		@ $mol_mem
 		local() {
-			return this.$.$mol_store_local.sub( '$my_itmo_schedule', new $mol_store( {} as Record< string, string > ) )
+			return this.$.$mol_store_local.sub( '$my_itmo_schedule', new $mol_store( {} as Record< string, string | null > ) )
 		}
 		
 		slot_value( slot: string, next?: string ) {
+			if( next !== undefined ) {
+				const old = this.discipline_slot( next )
+				if( old ) this.local().value( old, null )
+			}
 			return this.local().value( slot, next ) ?? ''
 		}
 		
@@ -117,13 +121,23 @@ namespace $.$$ {
 			return { discipline: id }
 		}
 		
-		discipline_slot( id: string ): string {
+		discipline_slot( id: string, next?: string ) {
+			if( next !== undefined ) this.slot_value( next, id )
 			return this.disciplines_slot()[ id ] ?? ''
 		}
 		
 		@ $mol_mem_key
+		discipline_slot_options( id: string ) {
+			const data = this.data()
+			const slots = data.discipline[ id ].variants
+				.map( flow_id => data.flow[ flow_id ].variants[0] )
+				.map( les => ( les.date ?? '' ) + 'T' + ( les.time_start ?? '' ) )
+			return [ ... new Set( slots ) ].sort()
+		}
+		
+		@ $mol_mem_key
 		discipline_slot_title( slot: string ) {
-			return new $mol_time_moment( slot ).toString( 'DD Mon hh:mm' )
+			return ( this.slot_value( slot ) ? '🔵 ' : '🟢 ' ) + new $mol_time_moment( slot ).toString( 'DD Mon hh:mm' )
 		}
 		
 		@ $mol_mem

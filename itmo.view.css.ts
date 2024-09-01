@@ -44,7 +44,7 @@ namespace $.$$ {
 		
 		Discipline_slot: {
 			flex: {
-				basis: '8rem',
+				basis: '10rem',
 			},
 		},
 		
