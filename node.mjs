@@ -8486,12 +8486,16 @@ var $;
 			if(next !== undefined) return next;
 			return "";
 		}
+		discipline_slot_options(id){
+			return [];
+		}
 		discipline_slot_title(id){
 			return "";
 		}
 		Discipline_slot(id){
 			const obj = new this.$.$mol_select();
 			(obj.value) = (next) => ((this?.discipline_slot(id, next)));
+			(obj.options) = () => ((this?.discipline_slot_options(id)));
 			(obj.option_label) = (id) => ((this?.discipline_slot_title(id)));
 			return obj;
 		}
@@ -9928,6 +9932,11 @@ var $;
                 return this.$.$mol_store_local.sub('$my_itmo_schedule', new $mol_store({}));
             }
             slot_value(slot, next) {
+                if (next !== undefined) {
+                    const old = this.discipline_slot(next);
+                    if (old)
+                        this.local().value(old, null);
+                }
                 return this.local().value(slot, next) ?? '';
             }
             disciplines_slot() {
@@ -9945,11 +9954,20 @@ var $;
             discipline_arg(id) {
                 return { discipline: id };
             }
-            discipline_slot(id) {
+            discipline_slot(id, next) {
+                if (next !== undefined)
+                    this.slot_value(next, id);
                 return this.disciplines_slot()[id] ?? '';
             }
+            discipline_slot_options(id) {
+                const data = this.data();
+                const slots = data.discipline[id].variants
+                    .map(flow_id => data.flow[flow_id].variants[0])
+                    .map(les => (les.date ?? '') + 'T' + (les.time_start ?? ''));
+                return [...new Set(slots)].sort();
+            }
             discipline_slot_title(slot) {
-                return new $mol_time_moment(slot).toString('DD Mon hh:mm');
+                return (this.slot_value(slot) ? '🔵 ' : '🟢 ') + new $mol_time_moment(slot).toString('DD Mon hh:mm');
             }
             discipline_current() {
                 return this.$.$mol_state_arg.value('discipline') ?? null;
@@ -10002,6 +10020,9 @@ var $;
         __decorate([
             $mol_mem
         ], $my_itmo.prototype, "disciplines_rows", null);
+        __decorate([
+            $mol_mem_key
+        ], $my_itmo.prototype, "discipline_slot_options", null);
         __decorate([
             $mol_mem_key
         ], $my_itmo.prototype, "discipline_slot_title", null);
@@ -10058,7 +10079,7 @@ var $;
             },
             Discipline_slot: {
                 flex: {
-                    basis: '8rem',
+                    basis: '10rem',
                 },
             },
             Discipline_title: {
