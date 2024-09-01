@@ -7996,7 +7996,7 @@ var $;
 		day_title(id){
 			return "00";
 		}
-		slot_time(id){
+		slot_descr(id){
 			return "00:00 .. 00:00";
 		}
 		slot_value(id, next){
@@ -8014,7 +8014,7 @@ var $;
 		}
 		Slot(id){
 			const obj = new this.$.$mol_labeler();
-			(obj.title) = () => ((this?.slot_time(id)));
+			(obj.title) = () => ((this?.slot_descr(id)));
 			(obj.Content) = () => ((this?.Slot_value(id)));
 			return obj;
 		}
@@ -9322,8 +9322,9 @@ var $;
             slots() {
                 return Object.keys(this.slots_data()).map(slot => this.Slot(slot));
             }
-            slot_time(slot) {
-                return new $mol_time_moment(slot).toString('hh:mm');
+            slot_descr(slot) {
+                return new $mol_time_moment(slot).toString('hh:mm')
+                    + ' ' + (this.data().flow[this.slot_value(slot)]?.variants[0].room ?? '');
             }
             slot_options(slot) {
                 const options = Object.fromEntries(this.slots_data()[slot].map(les => [
@@ -9418,6 +9419,9 @@ var $;
         __decorate([
             $mol_mem
         ], $my_itmo.prototype, "slots", null);
+        __decorate([
+            $mol_mem_key
+        ], $my_itmo.prototype, "slot_descr", null);
         __decorate([
             $mol_mem_key
         ], $my_itmo.prototype, "slot_options", null);
