@@ -16,6 +16,9 @@ $my_itmo $mol_book2
 							dictionary <= slot_options* *
 		<= Disciplines $mol_page
 			title \Дисциплины
+			tools /
+				<= Disciplines_query $mol_search
+					query? <=> disciplines_query? \
 			body /
 				<= Disciplines_rows $mol_list rows <= disciplines_rows /
 					<= Discipline*0 $mol_card content /
@@ -23,9 +26,12 @@ $my_itmo $mol_book2
 							value? <=> discipline_slot*? \
 							options <= discipline_slot_options* /string
 							option_label* <= discipline_slot_title* \
-						<= Discipline_title* $mol_link
-							title <= discipline_title* \
+						<= Discipline_link* $mol_link
 							arg <= discipline_arg* *
+							sub /
+								<= Discipline_title* $mol_dimmer
+									needle <= disciplines_query
+									haystack <= discipline_title* \
 		^ pages_dynamic /
 			<= Discipline_page* $mol_page
 				title <= discipline_title*

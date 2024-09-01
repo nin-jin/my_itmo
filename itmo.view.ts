@@ -106,7 +106,9 @@ namespace $.$$ {
 		
 		@ $mol_mem
 		disciplines_rows() {
-			return Object.keys( this.data().discipline ).map( id => this.Discipline( id ) )
+			return Object.keys( this.data().discipline )
+				.filter( $mol_match_text( this.disciplines_query(), id => [ this.discipline_title( id ) ]) )
+				.map( id => this.Discipline( id ) )
 		}
 		
 		discipline_title( id: string ) {
