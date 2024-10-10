@@ -127,6 +127,7 @@
     "$mol_state_arg",
     "$mol_state",
     "$mol_action",
+    "$mol_icon_script_text",
     "$mol_icon_script",
     "$mol_icon",
     "$mol_svg_root",
