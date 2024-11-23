@@ -112,7 +112,7 @@ $mol_button_minor $mol_button_typed
 
 $mol_page $mol_view
 	dom_name \article
-	field *
+	attr *
 		^
 		tabIndex <= tabindex -1
 	sub /

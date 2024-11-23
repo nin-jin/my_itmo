@@ -168,6 +168,7 @@ declare namespace $ {
 
 declare namespace $ {
     class $mol_wire_pub_sub extends $mol_wire_pub implements $mol_wire_sub {
+        [x: symbol]: () => any[];
         protected pub_from: number;
         protected cursor: $mol_wire_cursor;
         get temp(): boolean;
@@ -202,6 +203,7 @@ declare namespace $ {
 
 declare namespace $ {
     abstract class $mol_wire_fiber<Host, Args extends readonly unknown[], Result> extends $mol_wire_pub_sub {
+        [x: symbol]: string | (() => any[]);
         readonly task: (this: Host, ...args: Args) => Result;
         readonly host?: Host | undefined;
         static warm: boolean;
@@ -536,14 +538,14 @@ declare namespace $ {
         timeout?: number;
         env?: Record<string, string | undefined>;
     };
-    function $mol_run_async(this: $, { dir, timeout, command, env }: $mol_run_options): import("child_process").SpawnSyncReturns<Buffer> | (Promise<$mol_run_error_context> & {
+    function $mol_run_async(this: $, { dir, timeout, command, env }: $mol_run_options): import("child_process").SpawnSyncReturns<Buffer<ArrayBufferLike>> | (Promise<$mol_run_error_context> & {
         destructor: () => void;
     });
-    function $mol_run(this: $, options: $mol_run_options): $mol_run_error_context | import("child_process").SpawnSyncReturns<Buffer>;
+    function $mol_run(this: $, options: $mol_run_options): $mol_run_error_context | import("child_process").SpawnSyncReturns<Buffer<ArrayBufferLike>>;
 }
 
 declare namespace $ {
-    function $mol_exec(this: $, dir: string, command: string, ...args: readonly string[]): $mol_run_error_context | import("child_process").SpawnSyncReturns<Buffer>;
+    function $mol_exec(this: $, dir: string, command: string, ...args: readonly string[]): $mol_run_error_context | import("child_process").SpawnSyncReturns<Buffer<ArrayBufferLike>>;
 }
 
 declare namespace $ {
@@ -916,6 +918,7 @@ declare namespace $ {
     function $mol_view_visible_height(): number;
     function $mol_view_state_key(suffix: string): string;
     class $mol_view extends $mol_object {
+        [x: symbol]: () => any[];
         static Root<This extends typeof $mol_view>(this: This, id: number): InstanceType<This>;
         autorun(): void;
         static autobind(): void;
@@ -1353,7 +1356,7 @@ declare namespace $ {
 }
 
 declare namespace $ {
-    function $mol_charset_encode(value: string): Uint8Array;
+    function $mol_charset_encode(value: string): Uint8Array<ArrayBufferLike>;
 }
 
 declare namespace $ {
@@ -1421,7 +1424,7 @@ declare namespace $ {
         stat(next?: $mol_file_stat | null, virt?: 'virt'): $mol_file_stat | null;
         ensure(): void;
         drop(): void;
-        buffer(next?: Uint8Array): Uint8Array;
+        buffer(next?: Uint8Array): Uint8Array<ArrayBufferLike>;
         sub(): $mol_file[];
         resolve(path: string): $mol_file;
         relate(base?: $mol_file): string;
@@ -1738,9 +1741,9 @@ declare namespace $ {
 		foot( ): readonly($mol_view)[]
 		Foot( ): $mol_view
 		dom_name( ): string
-		field( ): ({ 
+		attr( ): ({ 
 			'tabIndex': ReturnType< $mol_page['tabindex'] >,
-		})  & ReturnType< $mol_view['field'] >
+		})  & ReturnType< $mol_view['attr'] >
 		sub( ): readonly(any)[]
 	}
 	
@@ -3300,7 +3303,7 @@ declare namespace $ {
 declare namespace $ {
     function $mol_data_record<Sub extends Record<string, $mol_data_value>>(sub: Sub): ((val: $mol_type_merge<$mol_type_override<Partial<{ [key in keyof Sub]: Parameters<Sub[key]>[0]; }>, Pick<{ [key in keyof Sub]: Parameters<Sub[key]>[0]; }, { [Field in keyof { [key in keyof Sub]: Parameters<Sub[key]>[0]; }]: undefined extends { [key in keyof Sub]: Parameters<Sub[key]>[0]; }[Field] ? never : Field; }[keyof Sub]>>>) => Readonly<$mol_type_merge<$mol_type_override<Partial<{ [key_1 in keyof Sub]: ReturnType<Sub[key_1]>; }>, Pick<{ [key_1 in keyof Sub]: ReturnType<Sub[key_1]>; }, { [Field_1 in keyof { [key_1 in keyof Sub]: ReturnType<Sub[key_1]>; }]: undefined extends { [key_1 in keyof Sub]: ReturnType<Sub[key_1]>; }[Field_1] ? never : Field_1; }[keyof Sub]>>>>) & {
         config: Sub;
-        Value: Readonly<$mol_type_merge<$mol_type_override<Partial<{ [key in keyof Sub]: ReturnType<Sub[key]>; }>, Pick<{ [key in keyof Sub]: ReturnType<Sub[key]>; }, { [Field in keyof { [key in keyof Sub]: ReturnType<Sub[key]>; }]: undefined extends { [key in keyof Sub]: ReturnType<Sub[key]>; }[Field] ? never : Field; }[keyof Sub]>>>>;
+        Value: ReturnType<Value>;
     };
 }
 
@@ -3312,7 +3315,7 @@ declare namespace $ {
 declare namespace $ {
     function $mol_data_dict<Sub extends $mol_data_value>(sub: Sub): ((val: Readonly<Record<string, ReturnType<Sub>>>) => Readonly<Record<string, ReturnType<Sub>>>) & {
         config: Sub;
-        Value: Readonly<Record<string, ReturnType<Sub>>>;
+        Value: ReturnType<Value>;
     };
 }
 
@@ -3327,7 +3330,7 @@ declare namespace $ {
 declare namespace $ {
     function $mol_data_const<Val>(ref: Val): ((val: Val) => Val) & {
         config: Val;
-        Value: Val;
+        Value: ReturnType<Value>;
     };
 }
 
@@ -3338,14 +3341,14 @@ declare namespace $ {
 declare namespace $ {
     function $mol_data_array<Sub extends $mol_data_value>(sub: Sub): ((val: readonly Parameters<Sub>[0][]) => readonly ReturnType<Sub>[]) & {
         config: Sub;
-        Value: readonly ReturnType<Sub>[];
+        Value: ReturnType<Value>;
     };
 }
 
 declare namespace $ {
     function $mol_data_nullable<Sub extends $mol_data_value>(sub: Sub): ((val: Parameters<Sub>[0] | null) => ReturnType<Sub> | null) & {
         config: Sub;
-        Value: ReturnType<Sub> | null;
+        Value: ReturnType<Value>;
     };
 }
 
@@ -3376,7 +3379,7 @@ declare namespace $ {
         config: {
             funcs: Funcs & Guard<Funcs>;
         };
-        Value: $mol_type_result<$mol_type_foot<Funcs>>;
+        Value: ReturnType<Value>;
     };
     export {};
 }
@@ -3455,6 +3458,7 @@ declare namespace $ {
         offset?: $mol_time_duration_config;
     };
     class $mol_time_moment extends $mol_time_base {
+        [x: symbol]: (() => any[]) | ((mode: "default" | "number" | "string") => string | number);
         constructor(config?: $mol_time_moment_config);
         readonly year: number | undefined;
         readonly month: number | undefined;
@@ -3688,35 +3692,21 @@ declare namespace $ {
                         name: (val: string) => string;
                         type: ((val: "module_group") => "module_group") & {
                             config: "module_group";
-                            Value: "module_group";
+                            Value: ReturnType<Value>;
                         };
                         required: (val: boolean) => boolean;
                         variants: ((val: readonly number[]) => readonly number[]) & {
                             config: (val: number) => number;
-                            Value: readonly number[];
+                            Value: ReturnType<Value>;
                         };
                         selections: ((val: readonly number[]) => readonly number[]) & {
                             config: (val: number) => number;
-                            Value: readonly number[];
+                            Value: ReturnType<Value>;
                         };
                     };
-                    Value: Readonly<{
-                        name: string;
-                        id: number;
-                        type: "module_group";
-                        required: boolean;
-                        variants: readonly number[];
-                        selections: readonly number[];
-                    }>;
+                    Value: ReturnType<Value>;
                 };
-                Value: Readonly<Record<string, Readonly<{
-                    name: string;
-                    id: number;
-                    type: "module_group";
-                    required: boolean;
-                    variants: readonly number[];
-                    selections: readonly number[];
-                }>>>;
+                Value: ReturnType<Value>;
             };
             module: ((val: Readonly<Record<string, Readonly<{
                 name: string;
@@ -3761,41 +3751,23 @@ declare namespace $ {
                         name: (val: string) => string;
                         type: ((val: "module") => "module") & {
                             config: "module";
-                            Value: "module";
+                            Value: ReturnType<Value>;
                         };
                         required: (val: boolean) => boolean;
                         variants: ((val: readonly number[]) => readonly number[]) & {
                             config: (val: number) => number;
-                            Value: readonly number[];
+                            Value: ReturnType<Value>;
                         };
                         selections: ((val: readonly number[]) => readonly number[]) & {
                             config: (val: number) => number;
-                            Value: readonly number[];
+                            Value: ReturnType<Value>;
                         };
                         color_index: (val: number) => number;
                         group_id: (val: number) => number;
                     };
-                    Value: Readonly<{
-                        name: string;
-                        id: number;
-                        type: "module";
-                        required: boolean;
-                        variants: readonly number[];
-                        selections: readonly number[];
-                        color_index: number;
-                        group_id: number;
-                    }>;
+                    Value: ReturnType<Value>;
                 };
-                Value: Readonly<Record<string, Readonly<{
-                    name: string;
-                    id: number;
-                    type: "module";
-                    required: boolean;
-                    variants: readonly number[];
-                    selections: readonly number[];
-                    color_index: number;
-                    group_id: number;
-                }>>>;
+                Value: ReturnType<Value>;
             };
             discipline: ((val: Readonly<Record<string, Readonly<{
                 name: string;
@@ -3848,50 +3820,28 @@ declare namespace $ {
                         name: (val: string) => string;
                         type: ((val: "discipline") => "discipline") & {
                             config: "discipline";
-                            Value: "discipline";
+                            Value: ReturnType<Value>;
                         };
                         language: (val: string) => string;
                         required: (val: boolean) => boolean;
                         variants: ((val: readonly number[]) => readonly number[]) & {
                             config: (val: number) => number;
-                            Value: readonly number[];
+                            Value: ReturnType<Value>;
                         };
                         flow_info: ((val: string | null) => string | null) & {
                             config: (val: string) => string;
-                            Value: string | null;
+                            Value: ReturnType<Value>;
                         };
                         selections: ((val: readonly number[]) => readonly number[]) & {
                             config: (val: number) => number;
-                            Value: readonly number[];
+                            Value: ReturnType<Value>;
                         };
                         module_id: (val: number) => number;
                         description: (val: string) => string;
                     };
-                    Value: Readonly<{
-                        name: string;
-                        id: number;
-                        type: "discipline";
-                        required: boolean;
-                        variants: readonly number[];
-                        selections: readonly number[];
-                        language: string;
-                        flow_info: string | null;
-                        module_id: number;
-                        description: string;
-                    }>;
+                    Value: ReturnType<Value>;
                 };
-                Value: Readonly<Record<string, Readonly<{
-                    name: string;
-                    id: number;
-                    type: "discipline";
-                    required: boolean;
-                    variants: readonly number[];
-                    selections: readonly number[];
-                    language: string;
-                    flow_info: string | null;
-                    module_id: number;
-                    description: string;
-                }>>>;
+                Value: ReturnType<Value>;
             };
             flow: ((val: Readonly<Record<string, Readonly<{
                 name: string;
@@ -4055,7 +4005,7 @@ declare namespace $ {
                         semester: (val: number) => number;
                         teachers: ((val: readonly string[]) => readonly string[]) & {
                             config: (val: string) => string;
-                            Value: readonly string[];
+                            Value: ReturnType<Value>;
                         };
                         variants: ((val: readonly {
                             date?: $mol_time_moment_config | undefined;
@@ -4162,17 +4112,17 @@ declare namespace $ {
                                 config: {
                                     note: ((val: string | null) => string | null) & {
                                         config: (val: string) => string;
-                                        Value: string | null;
+                                        Value: ReturnType<Value>;
                                     };
                                     room: ((val: string | null) => string | null) & {
                                         config: (val: string) => string;
-                                        Value: string | null;
+                                        Value: ReturnType<Value>;
                                     };
                                     type: (val: string) => string;
                                     group: (val: string) => string;
                                     bld_id: ((val: number | null) => number | null) & {
                                         config: (val: number) => number;
-                                        Value: number | null;
+                                        Value: ReturnType<Value>;
                                     };
                                     format: (val: string) => string;
                                     flow_id: (val: number) => number;
@@ -4180,261 +4130,65 @@ declare namespace $ {
                                     subject: (val: string) => string;
                                     building: ((val: string | null) => string | null) & {
                                         config: (val: string) => string;
-                                        Value: string | null;
+                                        Value: ReturnType<Value>;
                                     };
                                     time_end: (val: string) => string;
                                     zoom_url: ((val: string | null) => string | null) & {
                                         config: (val: string) => string;
-                                        Value: string | null;
+                                        Value: ReturnType<Value>;
                                     };
                                     format_id: (val: number) => number;
                                     work_type: (val: string) => string;
                                     zoom_info: ((val: string | null) => string | null) & {
                                         config: (val: string) => string;
-                                        Value: string | null;
+                                        Value: ReturnType<Value>;
                                     };
                                     subject_id: (val: number) => number;
                                     teacher_id: ((val: number | null) => number | null) & {
                                         config: (val: number) => number;
-                                        Value: number | null;
+                                        Value: ReturnType<Value>;
                                     };
                                     time_start: (val: string) => string;
                                     main_bld_id: ((val: number | null) => number | null) & {
                                         config: (val: number) => number;
-                                        Value: number | null;
+                                        Value: ReturnType<Value>;
                                     };
                                     flow_type_id: (val: number) => number;
                                     teacher_name: ((val: string | null) => string | null) & {
                                         config: (val: string) => string;
-                                        Value: string | null;
+                                        Value: ReturnType<Value>;
                                     };
                                     work_type_id: (val: number) => number;
                                     zoom_password: ((val: string | null) => string | null) & {
                                         config: (val: string) => string;
-                                        Value: string | null;
+                                        Value: ReturnType<Value>;
                                     };
                                     date: ((this: any, input: $mol_time_moment_config | undefined) => $mol_time_moment) & {
                                         config: {
                                             funcs: [typeof $mol_time_moment] & [new (input: $mol_time_moment_config | undefined) => unknown];
                                         };
-                                        Value: $mol_time_moment;
+                                        Value: ReturnType<Value>;
                                     };
                                 };
-                                Value: Readonly<{
-                                    group: string;
-                                    type: string;
-                                    note: string | null;
-                                    room: string | null;
-                                    bld_id: number | null;
-                                    format: string;
-                                    flow_id: number;
-                                    pair_id: number;
-                                    subject: string;
-                                    building: string | null;
-                                    time_end: string;
-                                    zoom_url: string | null;
-                                    format_id: number;
-                                    work_type: string;
-                                    zoom_info: string | null;
-                                    subject_id: number;
-                                    teacher_id: number | null;
-                                    time_start: string;
-                                    main_bld_id: number | null;
-                                    flow_type_id: number;
-                                    teacher_name: string | null;
-                                    work_type_id: number;
-                                    zoom_password: string | null;
-                                    date: $mol_time_moment;
-                                }>;
+                                Value: ReturnType<Value>;
                             };
-                            Value: readonly Readonly<{
-                                group: string;
-                                type: string;
-                                note: string | null;
-                                room: string | null;
-                                bld_id: number | null;
-                                format: string;
-                                flow_id: number;
-                                pair_id: number;
-                                subject: string;
-                                building: string | null;
-                                time_end: string;
-                                zoom_url: string | null;
-                                format_id: number;
-                                work_type: string;
-                                zoom_info: string | null;
-                                subject_id: number;
-                                teacher_id: number | null;
-                                time_start: string;
-                                main_bld_id: number | null;
-                                flow_type_id: number;
-                                teacher_name: string | null;
-                                work_type_id: number;
-                                zoom_password: string | null;
-                                date: $mol_time_moment;
-                            }>[];
+                            Value: ReturnType<Value>;
                         };
                         available: (val: boolean) => boolean;
                         limit_max: (val: number) => number;
                         work_type: (val: number) => number;
                         selections: ((val: readonly number[]) => readonly number[]) & {
                             config: (val: number) => number;
-                            Value: readonly number[];
+                            Value: ReturnType<Value>;
                         };
                         discipline_id: (val: number) => number;
                     };
-                    Value: Readonly<{
-                        name: string;
-                        id: number;
-                        required: boolean;
-                        variants: readonly Readonly<{
-                            group: string;
-                            type: string;
-                            note: string | null;
-                            room: string | null;
-                            bld_id: number | null;
-                            format: string;
-                            flow_id: number;
-                            pair_id: number;
-                            subject: string;
-                            building: string | null;
-                            time_end: string;
-                            zoom_url: string | null;
-                            format_id: number;
-                            work_type: string;
-                            zoom_info: string | null;
-                            subject_id: number;
-                            teacher_id: number | null;
-                            time_start: string;
-                            main_bld_id: number | null;
-                            flow_type_id: number;
-                            teacher_name: string | null;
-                            work_type_id: number;
-                            zoom_password: string | null;
-                            date: $mol_time_moment;
-                        }>[];
-                        selections: readonly number[];
-                        year: string;
-                        semester: number;
-                        teachers: readonly string[];
-                        work_type: number;
-                        available: boolean;
-                        limit_max: number;
-                        discipline_id: number;
-                    }>;
+                    Value: ReturnType<Value>;
                 };
-                Value: Readonly<Record<string, Readonly<{
-                    name: string;
-                    id: number;
-                    required: boolean;
-                    variants: readonly Readonly<{
-                        group: string;
-                        type: string;
-                        note: string | null;
-                        room: string | null;
-                        bld_id: number | null;
-                        format: string;
-                        flow_id: number;
-                        pair_id: number;
-                        subject: string;
-                        building: string | null;
-                        time_end: string;
-                        zoom_url: string | null;
-                        format_id: number;
-                        work_type: string;
-                        zoom_info: string | null;
-                        subject_id: number;
-                        teacher_id: number | null;
-                        time_start: string;
-                        main_bld_id: number | null;
-                        flow_type_id: number;
-                        teacher_name: string | null;
-                        work_type_id: number;
-                        zoom_password: string | null;
-                        date: $mol_time_moment;
-                    }>[];
-                    selections: readonly number[];
-                    year: string;
-                    semester: number;
-                    teachers: readonly string[];
-                    work_type: number;
-                    available: boolean;
-                    limit_max: number;
-                    discipline_id: number;
-                }>>>;
+                Value: ReturnType<Value>;
             };
         };
-        Value: Readonly<{
-            group: Readonly<Record<string, Readonly<{
-                name: string;
-                id: number;
-                type: "module_group";
-                required: boolean;
-                variants: readonly number[];
-                selections: readonly number[];
-            }>>>;
-            module: Readonly<Record<string, Readonly<{
-                name: string;
-                id: number;
-                type: "module";
-                required: boolean;
-                variants: readonly number[];
-                selections: readonly number[];
-                color_index: number;
-                group_id: number;
-            }>>>;
-            discipline: Readonly<Record<string, Readonly<{
-                name: string;
-                id: number;
-                type: "discipline";
-                required: boolean;
-                variants: readonly number[];
-                selections: readonly number[];
-                language: string;
-                flow_info: string | null;
-                module_id: number;
-                description: string;
-            }>>>;
-            flow: Readonly<Record<string, Readonly<{
-                name: string;
-                id: number;
-                required: boolean;
-                variants: readonly Readonly<{
-                    group: string;
-                    type: string;
-                    note: string | null;
-                    room: string | null;
-                    bld_id: number | null;
-                    format: string;
-                    flow_id: number;
-                    pair_id: number;
-                    subject: string;
-                    building: string | null;
-                    time_end: string;
-                    zoom_url: string | null;
-                    format_id: number;
-                    work_type: string;
-                    zoom_info: string | null;
-                    subject_id: number;
-                    teacher_id: number | null;
-                    time_start: string;
-                    main_bld_id: number | null;
-                    flow_type_id: number;
-                    teacher_name: string | null;
-                    work_type_id: number;
-                    zoom_password: string | null;
-                    date: $mol_time_moment;
-                }>[];
-                selections: readonly number[];
-                year: string;
-                semester: number;
-                teachers: readonly string[];
-                work_type: number;
-                available: boolean;
-                limit_max: number;
-                discipline_id: number;
-            }>>>;
-        }>;
+        Value: ReturnType<Value>;
     };
 }
 
@@ -4451,7 +4205,7 @@ declare namespace $ {
         message(): string;
         headers(): Headers;
         mime(): string | null;
-        stream(): ReadableStream<Uint8Array> | null;
+        stream(): ReadableStream<Uint8Array<ArrayBufferLike>> | null;
         text(): string;
         json(): unknown;
         blob(): Blob;
@@ -4466,7 +4220,7 @@ declare namespace $ {
         };
         static response(input: RequestInfo, init?: RequestInit): $mol_fetch_response;
         static success(input: RequestInfo, init?: RequestInit): $mol_fetch_response;
-        static stream(input: RequestInfo, init?: RequestInit): ReadableStream<Uint8Array> | null;
+        static stream(input: RequestInfo, init?: RequestInit): ReadableStream<Uint8Array<ArrayBufferLike>> | null;
         static text(input: RequestInfo, init?: RequestInit): string;
         static json(input: RequestInfo, init?: RequestInit): unknown;
         static blob(input: RequestInfo, init?: RequestInit): Blob;
