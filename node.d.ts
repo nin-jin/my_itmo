@@ -3482,7 +3482,7 @@ declare namespace $ {
 }
 
 declare namespace $ {
-    function $mol_data_const<Val>(ref: Val): ((val: Val) => Val) & {
+    function $mol_data_const<const Val>(ref: Val): ((val: Val) => Val) & {
         config: Val;
         Value: Val;
     };
