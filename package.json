@@ -231,6 +231,8 @@
     "$mol_time_duration",
     "$mol_time_base",
     "$mol_fetch",
+    "$mol_rest_code",
+    "$mol_rest",
     "$mol_dom_parse",
     "$mol_array_groups",
     "$mol_array",
