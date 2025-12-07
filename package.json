@@ -243,7 +243,6 @@
     "$mol_mem_force"
   ],
   "dependencies": {
-    "internal": "*",
     "jsdom": "*"
   }
 }
