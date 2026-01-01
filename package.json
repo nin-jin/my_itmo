@@ -169,6 +169,8 @@
     "$mol_select",
     "$mol_pick",
     "$mol_pop",
+    "$mol_follower",
+    "$mol_ghost",
     "$mol_check",
     "$mol_dimmer",
     "$mol_paragraph",
