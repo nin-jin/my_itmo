@@ -11251,11 +11251,12 @@ var $;
 (function ($) {
     class $mol_store extends $mol_object2 {
         data_default;
-        constructor(data_default) {
+        constructor(data_default = {}) {
             super();
             this.data_default = data_default;
         }
         data(next) {
+            $mol_wire_solid();
             return next === undefined ? this.data_default : next;
         }
         snapshot(next) {
@@ -11326,48 +11327,62 @@ var $;
 "use strict";
 var $;
 (function ($) {
-    class $mol_store_local_class extends $mol_store {
+    class $mol_store_native extends $mol_store {
         native() {
-            check: try {
-                const native = $mol_dom_context.localStorage;
-                if (!native)
-                    break check;
-                native.setItem('', '');
-                native.removeItem('');
-                return native;
-            }
-            catch (error) {
-                console.warn(error);
-            }
-            const dict = new Map();
-            return {
-                map: dict,
-                getItem: (key) => dict.get(key),
-                setItem: (key, value) => dict.set(key, value),
-                removeItem: (key) => dict.delete(key),
-            };
-        }
-        data() {
-            return $mol_fail(new Error('Forbidden for local storage'));
+            return null;
         }
         value(key, next, force) {
+            const native = this.native();
+            if (!native) {
+                return super.value(key, next);
+            }
             if (next === undefined)
-                return JSON.parse(this.native().getItem(key) || 'null');
+                return JSON.parse(native.getItem(key) || 'null');
             if (next === null)
-                this.native().removeItem(key);
+                native.removeItem(key);
             else
-                this.native().setItem(key, JSON.stringify(next));
+                native.setItem(key, JSON.stringify(next));
             return next;
         }
     }
     __decorate([
-        $mol_mem
-    ], $mol_store_local_class.prototype, "native", null);
-    __decorate([
         $mol_mem_key
-    ], $mol_store_local_class.prototype, "value", null);
+    ], $mol_store_native.prototype, "value", null);
+    $.$mol_store_native = $mol_store_native;
+})($ || ($ = {}));
+
+;
+"use strict";
+var $;
+(function ($) {
+    function $mol_store_safe(cb) {
+        const native = cb();
+        if (!native)
+            return null;
+        try {
+            native.setItem('', '');
+            native.removeItem('');
+            return native;
+        }
+        catch (error) {
+            console.warn(error);
+            return null;
+        }
+    }
+    $.$mol_store_safe = $mol_store_safe;
+})($ || ($ = {}));
+
+;
+"use strict";
+var $;
+(function ($) {
+    class $mol_store_local_class extends $mol_store_native {
+        native() {
+            return $mol_store_safe(() => this.$.$mol_dom_context.localStorage);
+        }
+    }
     $.$mol_store_local_class = $mol_store_local_class;
-    $.$mol_store_local = new $mol_store_local_class;
+    $.$mol_store_local = new $mol_store_local_class();
 })($ || ($ = {}));
 
 ;

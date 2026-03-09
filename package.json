@@ -250,7 +250,9 @@
     "$mol_array_groups",
     "$mol_store_local",
     "$mol_store",
-    "$mol_mem_force"
+    "$mol_store_native",
+    "$mol_mem_force",
+    "$mol_store_safe"
   ],
   "dependencies": {
     "autoinstall": "*",

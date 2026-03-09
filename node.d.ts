@@ -4879,8 +4879,8 @@ declare namespace $ {
 
 declare namespace $ {
     class $mol_store<Data> extends $mol_object2 {
-        data_default?: Data | undefined;
-        constructor(data_default?: Data | undefined);
+        data_default: Data;
+        constructor(data_default?: Data);
         data(next?: Data): NonNullable<Data> | (Data & null);
         snapshot(next?: string): string;
         value<Key extends keyof Data>(key: Key, next?: Data[Key]): Data[Key] & {};
@@ -4907,15 +4907,26 @@ declare namespace $ {
 }
 
 declare namespace $ {
-    class $mol_store_local_class extends $mol_store<Record<string, any>> {
-        native(): Storage | {
-            map: Map<string, string>;
-            getItem: (key: string) => string | undefined;
-            setItem: (key: string, value: string) => Map<string, string>;
-            removeItem: (key: string) => boolean;
+    class $mol_store_native extends $mol_store<Record<string, any>> {
+        native(): null | {
+            getItem: (key: string) => string | null;
+            setItem: (key: string, value: string) => void;
+            removeItem: (key: string) => void;
         };
-        data(): never;
-        value<Value>(key: string, next?: Value, force?: $mol_mem_force_cache): any;
+        value<Value>(key: string, next?: Value, force?: 'local' | $mol_mem_force_cache): any;
+    }
+}
+
+declare namespace $ {
+    function $mol_store_safe<Store extends {
+        setItem(key: string, value: string): void;
+        removeItem(key: string): void;
+    }>(cb: () => Store | null): Store | null;
+}
+
+declare namespace $ {
+    class $mol_store_local_class extends $mol_store_native {
+        native(): Storage | null;
     }
     let $mol_store_local: $mol_store<Record<string, any>>;
 }
