@@ -11333,9 +11333,8 @@ var $;
         }
         value(key, next, force) {
             const native = this.native();
-            if (!native) {
+            if (!native)
                 return super.value(key, next);
-            }
             if (next === undefined)
                 return JSON.parse(native.getItem(key) || 'null');
             if (next === null)
