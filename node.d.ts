@@ -2722,6 +2722,7 @@ declare namespace $ {
 		ReturnType< $mol_follower['Sub'] >
 	>
 	export class $mol_pop extends $mol_view {
+		align( ): string
 		bubble( ): any
 		Anchor( ): any
 		bubble_offset( ): readonly(number)[]
@@ -2733,7 +2734,8 @@ declare namespace $ {
 		showed( next?: boolean ): boolean
 		align_vert( ): string
 		align_hor( ): string
-		align( ): string
+		direction( ): string
+		align_enriched( ): ReturnType< $mol_pop['align'] >
 		prefer( ): string
 		auto( ): readonly(any)[]
 		sub( ): readonly(any)[]
@@ -2768,6 +2770,8 @@ declare namespace $.$$ {
         align(): string;
         align_vert(): "suspense" | "top" | "bottom";
         align_hor(): "suspense" | "left" | "right";
+        direction(): "ltr" | "rtl";
+        align_enriched(): string;
         bubble_offset(): number[];
         bubble_align(): number[];
         bubble(): void;
